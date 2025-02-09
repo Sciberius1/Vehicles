@@ -1,25 +1,21 @@
-// Import the Vehicle, Wheel, AbleToTow, and Driveable classes/interfaces
+// import the Vehicle, Car, Wheel, and AbleToTow classes/interfaces
 import Vehicle from "./Vehicle.js";
+import Car from "./Car.js";
 import Wheel from "./Wheel.js";
 import AbleToTow from "../interfaces/AbleToTow.js";
-import Driveable from "../interfaces/Driveable.js";
-import { initializeWheels } from "../utils/wheelUtils.js";
 
-// Extend the Vehicle class to create the Truck class and implement the AbleToTow and Driveable interfaces
-class Truck extends Vehicle implements AbleToTow, Driveable {
-  vin: string;
-  color: string;
-  make: string;
-  model: string;
-  year: number;
-  weight: number;
-  topSpeed: number;
+// TODO: The Truck class should extend the Vehicle class and should implement the AbleToTow interface
+class Truck extends Vehicle implements AbleToTow {
+  override vin: string;
+  override color: string;
+  override make: string;
+  override model: string;
+  override year: number;
+  override weight: number;
+  override topSpeed: number;
   wheels: Wheel[];
   towingCapacity: number;
-  started: boolean;
-  currentSpeed: number;
 
-  // Constructor for the Truck class
   constructor(
     vin: string,
     color: string,
@@ -31,7 +27,7 @@ class Truck extends Vehicle implements AbleToTow, Driveable {
     wheels: Wheel[],
     towingCapacity: number
   ) {
-    super();
+    super(vin, color, make, model, year, weight, topSpeed);
     this.vin = vin;
     this.color = color;
     this.make = make;
@@ -39,95 +35,40 @@ class Truck extends Vehicle implements AbleToTow, Driveable {
     this.year = year;
     this.weight = weight;
     this.topSpeed = topSpeed;
-    this.wheels = initializeWheels(wheels, 4);
+    this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel());
     this.towingCapacity = towingCapacity;
-    this.started = false;
-    this.currentSpeed = 0;
   }
 
-  // Method to start the truck
-  start(): void {
-    this.started = true;
-    console.log(`${this.make} ${this.model} started.`);
-  }
-
-  // Method to accelerate the truck
-  accelerate(change: number): void {
-    if (this.started) {
-      this.currentSpeed += change;
-      console.log(
-        `${this.make} ${this.model} accelerated to ${this.currentSpeed} mph.`
-      );
-    } else {
-      console.log(`${this.make} ${this.model} is not started.`);
-    }
-  }
-
-  // Method to decelerate the truck
-  decelerate(change: number): void {
-    if (this.started) {
-      this.currentSpeed = Math.max(0, this.currentSpeed - change);
-      console.log(
-        `${this.make} ${this.model} decelerated to ${this.currentSpeed} mph.`
-      );
-    } else {
-      console.log(`${this.make} ${this.model} is not started.`);
-    }
-  }
-
-  // Method to stop the truck
-  stop(): void {
-    this.currentSpeed = 0;
-    this.started = false;
-    console.log(`${this.make} ${this.model} stopped.`);
-  }
-
-  // Method to turn the truck
-  turn(direction: string): void {
-    if (this.started) {
-      console.log(`${this.make} ${this.model} turned ${direction}.`);
-    } else {
-      console.log(`${this.make} ${this.model} is not started.`);
-    }
-  }
-
-  // Method to reverse the truck
-  reverse(): void {
-    if (this.started) {
-      console.log(`${this.make} ${this.model} is reversing.`);
-    } else {
-      console.log(`${this.make} ${this.model} is not started.`);
-    }
-  }
-
-  // Method to check if the truck is driveable
-  isDriveable(): boolean {
-    return this.started && this.currentSpeed > 0;
-  }
-
-  // Method to tow another truck
+  // TODO: Implement the tow method from the AbleToTow interface
   tow(vehicle: Truck): void {
-    if (!this.isDriveable()) {
-      console.log(
-        "This truck is not driveable and cannot tow another vehicle."
-      );
+    if (vehicle === this) {
+      console.log("The truck cannot tow itself.");
       return;
     }
 
-    const vehicleDetails = `${vehicle.make} ${vehicle.model}`;
-    if (vehicle.weight <= this.towingCapacity) {
-      console.log(`Towing ${vehicleDetails}`);
+    const make = vehicle.make;
+    const model = vehicle.model;
+    const weight = vehicle.weight;
+
+    if (weight <= this.towingCapacity) {
+      console.log(`The ${make} ${model} is being towed.`);
     } else {
-      console.log(`${vehicleDetails} is too heavy to be towed`);
+      console.log(`The ${make} ${model} is too heavy to be towed.`);
     }
   }
 
-  // Override the printDetails method from the Vehicle class
   override printDetails(): void {
     super.printDetails();
+    console.log(`VIN: ${this.vin}`);
+    console.log(`Color: ${this.color}`);
+    console.log(`Make: ${this.make}`);
+    console.log(`Model: ${this.model}`);
+    console.log(`Year: ${this.year}`);
+    console.log(`Weight: ${this.weight}`);
+    console.log(`Top Speed: ${this.topSpeed} mph`);
+    console.log(`Number of Doors: ${this.numberOfDoors}`);
     console.log(`Towing Capacity: ${this.towingCapacity}`);
-    console.log(`Wheels: ${this.wheels.length}`);
-    console.log(`Driveable: ${this.isDriveable()}`);
+    console.log(`Wheels: ${this.wheels.map((wheel) => wheel.toString()).join(", ")}`);
   }
 }
 

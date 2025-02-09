@@ -1,18 +1,16 @@
 // Importing Vehicle and Wheel classes
-import Vehicle from "./Vehicle.js";
-import Wheel from "./Wheel.js";
-import { initializeWheels } from "../utils/wheelUtils.js";
+import Vehicle from './Vehicle.js';
+import Wheel from './Wheel.js';
 
 // Car class that extends Vehicle class
 class Car extends Vehicle {
-  // Declare properties of the Car class
-  vin: string;
-  color: string;
-  make: string;
-  model: string;
-  year: number;
-  weight: number;
-  topSpeed: number;
+  override vin: string;
+  override color: string;
+  override make: string;
+  override model: string;
+  override year: number;
+  override weight: number;
+  override topSpeed: number;
   wheels: Wheel[];
 
   // Constructor for the Car class
@@ -27,7 +25,7 @@ class Car extends Vehicle {
     wheels: Wheel[]
   ) {
     // Call the constructor of the parent class, Vehicle
-    super();
+    super(vin, color, make, model, year, weight, topSpeed);
 
     // Initialize properties of the Car class
     this.vin = vin;
@@ -37,7 +35,7 @@ class Car extends Vehicle {
     this.year = year;
     this.weight = weight;
     this.topSpeed = topSpeed;
-    this.wheels = initializeWheels(wheels, 4);
+    this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel());
   }
 
   // Override the printDetails method from the Vehicle class
@@ -56,16 +54,16 @@ class Car extends Vehicle {
 
     // Print details of the wheels
     console.log(
-      `Wheel 1: ${this.wheels[0].getDiameter()} inch with a ${this.wheels[0].getTireBrand()} tire`
+      `Wheel 1: ${this.wheels[0].getDiameter} inch with a ${this.wheels[0].getTireBrand} tire`
     );
     console.log(
-      `Wheel 2: ${this.wheels[1].getDiameter()} inch with a ${this.wheels[1].getTireBrand()} tire`
+      `Wheel 2: ${this.wheels[1].getDiameter} inch with a ${this.wheels[1].getTireBrand} tire`
     );
     console.log(
-      `Wheel 3: ${this.wheels[2].getDiameter()} inch with a ${this.wheels[2].getTireBrand()} tire`
+      `Wheel 3: ${this.wheels[2].getDiameter} inch with a ${this.wheels[2].getTireBrand} tire`
     );
     console.log(
-      `Wheel 4: ${this.wheels[3].getDiameter()} inch with a ${this.wheels[3].getTireBrand()} tire`
+      `Wheel 4: ${this.wheels[3].getDiameter} inch with a ${this.wheels[3].getTireBrand} tire`
     );
   }
 }
