@@ -13,6 +13,7 @@ class Vehicle implements Driveable {
   year: number;
   weight: number;
   topSpeed: number;
+  driveable: boolean; // Add driveable property
 
   // Constructor for the Vehicle class
   constructor(
@@ -33,6 +34,7 @@ class Vehicle implements Driveable {
     this.topSpeed = topSpeed;
     this.started = false;
     this.currentSpeed = 0;
+    this.driveable = false; // Initialize driveable property
   }
 
   // Method to print vehicle details
@@ -46,6 +48,7 @@ class Vehicle implements Driveable {
     console.log(`Top Speed: ${this.topSpeed} mph`);
     console.log(`Vehicle started: ${this.started}`);
     console.log(`Vehicle current speed: ${this.currentSpeed} mph`);
+    console.log(`Is it driveable? ${this.driveable}`);
   }
 
   // Method to start the vehicle

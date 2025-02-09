@@ -11,8 +11,8 @@ class Car extends Vehicle {
   override year: number;
   override weight: number;
   override topSpeed: number;
+  override driveable: boolean;
   wheels: Wheel[];
-  driveable: boolean;
 
   // Constructor for the Car class
   constructor(

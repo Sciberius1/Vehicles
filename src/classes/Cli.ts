@@ -213,79 +213,107 @@ class Cli {
 
   // method to perform actions on a vehicle
   performActions(): void {
+    const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
+    if (!selectedVehicle) {
+      console.log('Vehicle not found.');
+      return;
+    }
+
+    // Determine available actions based on the selected vehicle
+    let availableActions = ['Print details', 'Exit'];
+    if (!selectedVehicle.driveable) {
+      availableActions.push('Fix the Vehicle');
+    } else if (!selectedVehicle.started) {
+      availableActions.push('Start the Vehicle');
+    } else {
+      availableActions.push(
+        'Accelerate 5 MPH',
+        'Decelerate 5 MPH',
+        'Stop vehicle',
+        'Turn right',
+        'Turn left',
+        'Reverse'
+      );
+      if (selectedVehicle instanceof Truck) {
+        availableActions.push('Tow a vehicle');
+      }
+      if (selectedVehicle instanceof Motorcycle && !selectedVehicle.hasSidecar) {
+        availableActions.push('Perform a wheelie');
+      }
+    }
+
     inquirer
       .prompt([
         {
           type: 'list',
           name: 'action',
           message: 'Select an action',
-          // add options to tow and wheelie
-          choices: [
-            'Print details',
-            'Start vehicle',
-            'Accelerate 5 MPH',
-            'Decelerate 5 MPH',
-            'Stop vehicle',
-            'Turn right',
-            'Turn left',
-            'Reverse',
-            'Tow a vehicle',
-            'Perform a wheelie',
-            'Select or create another vehicle',
-            'Exit',
-          ],
+          choices: availableActions,
         },
       ])
       .then((answers) => {
         // perform the selected action
         if (answers.action === 'Print details') {
-          // find the selected vehicle and print its details
-          const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
-          if (selectedVehicle) {
-            selectedVehicle.printDetails();
+          selectedVehicle.printDetails();
+        } else if (answers.action === 'Fix the Vehicle') {
+          selectedVehicle.driveable = true;
+          console.log('The vehicle has been fixed and is now driveable.');
+        } else if (answers.action === 'Start the Vehicle') {
+          if (selectedVehicle.driveable) {
+            selectedVehicle.start();
           } else {
-            console.log('Vehicle not found.');
+            console.log('This vehicle is not driveable.');
           }
-        } else if (answers.action === 'Tow a vehicle') {
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin && this.vehicles[i] instanceof Truck) {
-              if (this.vehicles[i].started) {
-                this.findVehicleToTow(this.vehicles[i] as Truck);
-              } else {
-                console.log('Only driveable trucks can tow a vehicle.');
-              }
-              return;
-            }
-          }
-        } else {
-          // find the selected vehicle
-          const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
-          if (selectedVehicle instanceof Car || selectedVehicle instanceof Motorcycle) {
-            if (answers.action === 'Start vehicle') {
-              selectedVehicle.start();
-            } else if (answers.action === 'Accelerate 5 MPH') {
-              selectedVehicle.accelerate(5);
-            } else if (answers.action === 'Decelerate 5 MPH') {
-              selectedVehicle.decelerate(5);
-            } else if (answers.action === 'Stop vehicle') {
-              selectedVehicle.stop();
-            } else if (answers.action === 'Turn right') {
-              selectedVehicle.turn('right');
-            } else if (answers.action === 'Turn left') {
-              selectedVehicle.turn('left');
-            } else if (answers.action === 'Reverse') {
-              selectedVehicle.reverse();
-            } else if (answers.action === 'Perform a wheelie' && selectedVehicle instanceof Motorcycle && !selectedVehicle.hasSidecar) {
-              selectedVehicle.wheelie();
-            } else {
-              console.log('Only Motorcycles without a sidecar can perform wheelies.');
-            }
+        } else if (answers.action === 'Accelerate 5 MPH') {
+          selectedVehicle.accelerate(5);
+        } else if (answers.action === 'Decelerate 5 MPH') {
+          selectedVehicle.decelerate(5);
+        } else if (answers.action === 'Stop vehicle') {
+          selectedVehicle.stop();
+        } else if (answers.action === 'Turn right') {
+          selectedVehicle.turn('right');
+        } else if (answers.action === 'Turn left') {
+          selectedVehicle.turn('left');
+        } else if (answers.action === 'Reverse') {
+          selectedVehicle.reverse();
+        } else if (answers.action === 'Tow a vehicle' && selectedVehicle instanceof Truck) {
+          if (selectedVehicle.started) {
+            this.findVehicleToTow(selectedVehicle);
           } else {
-            console.log('Only Motorcycles without a sidecar can perform wheelies.');
+            console.log('Only driveable trucks can tow a vehicle.');
           }
+        } else if (answers.action === 'Perform a wheelie' && selectedVehicle instanceof Motorcycle && !selectedVehicle.hasSidecar) {
+          selectedVehicle.wheelie();
+        } else if (answers.action === 'Perform a wheelie') {
+          console.log('Only Motorcycles without a sidecar can perform wheelies.');
         }
-        if (!this.exit) {
+
+        if (!this.exit && answers.action !== 'Exit') {
           // if the user does not want to exit, perform actions on the selected vehicle
+          this.performActions();
+        } else if (answers.action === 'Exit' && selectedVehicle.currentSpeed === 0) {
+          selectedVehicle.started = false;
+          inquirer
+            .prompt([
+              {
+                type: 'list',
+                name: 'nextAction',
+                message: 'What would you like to do next?',
+                choices: ['Create a new vehicle', 'Choose an existing vehicle', 'End Session'],
+              },
+            ])
+            .then((nextAnswers) => {
+              if (nextAnswers.nextAction === 'Create a new vehicle') {
+                this.createVehicle();
+              } else if (nextAnswers.nextAction === 'Choose an existing vehicle') {
+                this.chooseVehicle();
+              } else {
+                console.log('Session ended.');
+                this.exit = true;
+              }
+            });
+        } else if (answers.action === 'Exit') {
+          console.log('You must stop the vehicle before exiting.');
           this.performActions();
         }
       });
