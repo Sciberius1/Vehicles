@@ -18,7 +18,7 @@ class Motorcycle extends Vehicle {
   ) {
     super(vin, color, make, model, year, weight, topSpeed);
     this.hasSidecar = hasSidecar;
-    this.wheels = wheels.length === 2 ? wheels : Array(2).fill(new Wheel());
+    this.wheels = hasSidecar ? [...wheels, new Wheel()] : wheels.length === 2 ? wheels : Array(2).fill(new Wheel());
   }
 
   printDetails(): void {
@@ -39,11 +39,18 @@ class Motorcycle extends Vehicle {
     console.log(
       `Rear Wheel: ${this.wheels[1].getDiameter} inch with a ${this.wheels[1].getTireBrand} tire`
     );
+    if (this.hasSidecar) {
+      console.log(
+        `Sidecar Wheel: ${this.wheels[2].getDiameter} inch with a ${this.wheels[2].getTireBrand} tire`
+      );
+    }
   }
 
   // Method to perform a wheelie
   wheelie(): void {
-    if (this.currentSpeed > 0) {
+    if (this.hasSidecar) {
+      console.log(`Motorcycle ${this.make} ${this.model} cannot perform a wheelie with a sidecar.`);
+    } else if (this.currentSpeed > 0) {
       console.log(`Motorcycle ${this.make} ${this.model} is doing a wheelie!`);
     } else {
       console.log(`Motorcycle ${this.make} ${this.model} must be moving to perform a wheelie.`);

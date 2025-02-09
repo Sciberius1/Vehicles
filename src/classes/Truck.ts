@@ -4,7 +4,7 @@ import Car from "./Car.js";
 import Wheel from "./Wheel.js";
 import AbleToTow from "../interfaces/AbleToTow.js";
 
-// TODO: The Truck class should extend the Vehicle class and should implement the AbleToTow interface
+// Truck class that extends Vehicle and implements AbleToTow
 class Truck extends Vehicle implements AbleToTow {
   override vin: string;
   override color: string;
@@ -39,7 +39,7 @@ class Truck extends Vehicle implements AbleToTow {
     this.towingCapacity = towingCapacity;
   }
 
-  // TODO: Implement the tow method from the AbleToTow interface
+  // Implement the tow method from the AbleToTow interface
   tow(vehicle: Truck): void {
     if (vehicle === this) {
       console.log("The truck cannot tow itself.");
