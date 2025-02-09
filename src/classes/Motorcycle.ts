@@ -22,7 +22,7 @@ class Motorcycle extends Vehicle {
     // Call the constructor of the parent class, Vehicle
     super(vin, color, make, model, year, weight, topSpeed);
     this.hasSidecar = hasSidecar;
-    this.wheels = hasSidecar ? [...wheels, new Wheel()] : wheels.length === 2 ? wheels : Array(2).fill(new Wheel());
+    this.wheels = hasSidecar ? [...wheels, new Wheel(17, "Michelin")] : wheels.length === 2 ? wheels : Array(2).fill(new Wheel(17, "Michelin"));
     this.started = driveable;
   }
 

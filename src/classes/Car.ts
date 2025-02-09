@@ -37,7 +37,7 @@ class Car extends Vehicle {
     this.year = year;
     this.weight = weight;
     this.topSpeed = topSpeed;
-    this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel());
+    this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel(18, "Bridgestone"));
     this.driveable = driveable;
   }
 

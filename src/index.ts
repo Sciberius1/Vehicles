@@ -17,7 +17,7 @@ const truck1 = new Truck(
   2021,
   5000,
   120,
-  [],
+  [new Wheel(20, "Goodyear"), new Wheel(20, "Goodyear"), new Wheel(20, "Goodyear"), new Wheel(20, "Goodyear")],
   10000,
   true
 );
@@ -31,7 +31,7 @@ const car1 = new Car(
   2021,
   3000,
   130,
-  [],
+  [new Wheel(18, "Bridgestone"), new Wheel(18, "Bridgestone"), new Wheel(18, "Bridgestone"), new Wheel(18, "Bridgestone")],
   true
 );
 

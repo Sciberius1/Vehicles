@@ -95,7 +95,8 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
-          []
+          [new Wheel(18, "Bridgestone"), new Wheel(18, "Bridgestone"), new Wheel(18, "Bridgestone"), new Wheel(18, "Bridgestone")],
+          answers.driveable
         );
         car.started = answers.driveable;
         // push the car to the vehicles array
@@ -129,8 +130,9 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
-          [],
-          parseInt(answers.towingCapacity)
+          [new Wheel(20, "Goodyear"), new Wheel(20, "Goodyear"), new Wheel(20, "Goodyear"), new Wheel(20, "Goodyear")],
+          parseInt(answers.towingCapacity),
+          answers.driveable
         );
         truck.started = answers.driveable;
         // push the truck to the vehicles array
@@ -169,7 +171,8 @@ class Cli {
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
           answers.hasSidecar,
-          wheels
+          wheels,
+          answers.driveable
         );
         motorcycle.started = answers.driveable;
         // push the motorcycle to the vehicles array

@@ -35,7 +35,7 @@ class Truck extends Vehicle implements AbleToTow {
     this.year = year;
     this.weight = weight;
     this.topSpeed = topSpeed;
-    this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel());
+    this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel(20, "Goodyear"));
     this.towingCapacity = towingCapacity;
     this.started = driveable;
   }
