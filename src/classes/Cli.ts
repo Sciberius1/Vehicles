@@ -7,12 +7,9 @@ import Motorcycle from "./Motorcycle.js";
 
 // define the Cli class
 class Cli {
-  // update the vehicles property to accept Truck and Motorcycle objects as well
   vehicles: (Car | Truck | Motorcycle)[];
   selectedVehicleVin: string | undefined;
   exit: boolean = false;
-
-  // Update the constructor to accept Truck and Motorcycle objects as well
   constructor(vehicles: (Car | Truck | Motorcycle)[]) {
     this.vehicles = vehicles;
   }
@@ -221,7 +218,9 @@ class Cli {
 
     // Determine available actions based on the selected vehicle
     let availableActions = ['Print details', 'Exit'];
-    if (!selectedVehicle.driveable) {
+    if (selectedVehicle instanceof Truck && selectedVehicle.towedVehicle) {
+      availableActions.push('Deliver towed vehicle');
+    } else if (!selectedVehicle.driveable) {
       availableActions.push('Fix the Vehicle');
     } else if (!selectedVehicle.started) {
       availableActions.push('Start the Vehicle');
@@ -282,6 +281,8 @@ class Cli {
           } else {
             console.log('Only driveable trucks can tow a vehicle.');
           }
+        } else if (answers.action === 'Deliver towed vehicle' && selectedVehicle instanceof Truck) {
+          selectedVehicle.deliverTowedVehicle();
         } else if (answers.action === 'Perform a wheelie' && selectedVehicle instanceof Motorcycle && !selectedVehicle.hasSidecar) {
           selectedVehicle.wheelie();
         } else if (answers.action === 'Perform a wheelie') {

@@ -14,6 +14,7 @@ class Truck extends Vehicle implements AbleToTow {
   override topSpeed: number;
   wheels: Wheel[];
   towingCapacity: number;
+  towedVehicle: Vehicle | null = null; // Add towedVehicle property
 
   constructor(
     vin: string,
@@ -52,14 +53,31 @@ class Truck extends Vehicle implements AbleToTow {
       return;
     }
 
-    const make = vehicle.make;
-    const model = vehicle.model;
-    const weight = vehicle.weight;
+    if (vehicle.driveable) {
+      const make = vehicle.make;
+      const model = vehicle.model;
+      const weight = vehicle.weight;
 
-    if (weight <= this.towingCapacity) {
-      console.log(`The ${make} ${model} is being towed.`);
+      if (weight <= this.towingCapacity) {
+        this.towedVehicle = vehicle;
+        vehicle.driveable = false;
+        console.log(`The ${make} ${model} is being towed by this truck.`);
+      } else {
+        console.log(`The ${make} ${model} is too heavy to be towed.`);
+      }
     } else {
-      console.log(`The ${make} ${model} is too heavy to be towed.`);
+      console.log("The vehicle is already being towed.");
+    }
+  }
+
+  // Method to deliver the towed vehicle
+  deliverTowedVehicle(): void {
+    if (this.towedVehicle) {
+      console.log(`The ${this.towedVehicle.make} ${this.towedVehicle.model} has been delivered.`);
+      this.towedVehicle.driveable = true;
+      this.towedVehicle = null;
+    } else {
+      console.log("No vehicle is being towed.");
     }
   }
 
@@ -73,7 +91,13 @@ class Truck extends Vehicle implements AbleToTow {
     console.log(`Weight: ${this.weight}`);
     console.log(`Top Speed: ${this.topSpeed} mph`);
     console.log(`Towing Capacity: ${this.towingCapacity}`);
-    console.log(`Wheels: ${this.wheels.map((wheel) => wheel.toString()).join(", ")}`);
+    console.log(`Wheels:`);
+    this.wheels.forEach((wheel, index) => {
+      console.log(`  Wheel ${index + 1}: ${wheel.getDiameter} inch with a ${wheel.getTireBrand} tire`);
+    });
+    if (this.towedVehicle) {
+      console.log(`Currently towing: ${this.towedVehicle.make} ${this.towedVehicle.model}`);
+    }
   }
 }
 
