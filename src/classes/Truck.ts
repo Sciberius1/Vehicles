@@ -1,6 +1,5 @@
-// import the Vehicle, Car, Wheel, and AbleToTow classes/interfaces
+// import the Vehicle, Wheel, and AbleToTow classes/interfaces
 import Vehicle from "./Vehicle.js";
-import Car from "./Car.js";
 import Wheel from "./Wheel.js";
 import AbleToTow from "../interfaces/AbleToTow.js";
 
@@ -25,7 +24,8 @@ class Truck extends Vehicle implements AbleToTow {
     weight: number,
     topSpeed: number,
     wheels: Wheel[],
-    towingCapacity: number
+    towingCapacity: number,
+    driveable: boolean
   ) {
     super(vin, color, make, model, year, weight, topSpeed);
     this.vin = vin;
@@ -37,10 +37,16 @@ class Truck extends Vehicle implements AbleToTow {
     this.topSpeed = topSpeed;
     this.wheels = wheels.length === 4 ? wheels : Array(4).fill(new Wheel());
     this.towingCapacity = towingCapacity;
+    this.started = driveable;
   }
 
   // Implement the tow method from the AbleToTow interface
-  tow(vehicle: Truck): void {
+  tow(vehicle: Vehicle): void {
+    if (!this.started) {
+      console.log("The truck must be driveable to tow a vehicle.");
+      return;
+    }
+
     if (vehicle === this) {
       console.log("The truck cannot tow itself.");
       return;
@@ -66,7 +72,6 @@ class Truck extends Vehicle implements AbleToTow {
     console.log(`Year: ${this.year}`);
     console.log(`Weight: ${this.weight}`);
     console.log(`Top Speed: ${this.topSpeed} mph`);
-    console.log(`Number of Doors: ${this.numberOfDoors}`);
     console.log(`Towing Capacity: ${this.towingCapacity}`);
     console.log(`Wheels: ${this.wheels.map((wheel) => wheel.toString()).join(", ")}`);
   }

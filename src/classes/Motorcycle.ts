@@ -1,10 +1,12 @@
 import Vehicle from './Vehicle.js';
 import Wheel from './Wheel.js';
 
+// Motorcycle class that extends Vehicle class
 class Motorcycle extends Vehicle {
   hasSidecar: boolean;
   wheels: Wheel[];
 
+  // Constructor for the Motorcycle class
   constructor(
     vin: string,
     color: string,
@@ -14,14 +16,19 @@ class Motorcycle extends Vehicle {
     weight: number,
     topSpeed: number,
     hasSidecar: boolean,
-    wheels: Wheel[]
+    wheels: Wheel[],
+    driveable: boolean
   ) {
+    // Call the constructor of the parent class, Vehicle
     super(vin, color, make, model, year, weight, topSpeed);
     this.hasSidecar = hasSidecar;
     this.wheels = hasSidecar ? [...wheels, new Wheel()] : wheels.length === 2 ? wheels : Array(2).fill(new Wheel());
+    this.started = driveable;
   }
 
-  printDetails(): void {
+  // Override the printDetails method from the Vehicle class
+  override printDetails(): void {
+    // Call the printDetails method of the parent class, Vehicle
     super.printDetails();
     console.log(`VIN: ${this.vin}`);
     console.log(`Color: ${this.color}`);
@@ -58,4 +65,5 @@ class Motorcycle extends Vehicle {
   }
 }
 
+// Export the Motorcycle class as the default export
 export default Motorcycle;

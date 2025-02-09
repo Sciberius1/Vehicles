@@ -156,6 +156,10 @@ class Cli {
         { type: 'confirm', name: 'driveable', message: 'Is the vehicle driveable?' },
       ])
       .then((answers) => {
+        const wheels = [new Wheel(17, "Michelin"), new Wheel(17, "Michelin")];
+        if (answers.hasSidecar) {
+          wheels.push(new Wheel(17, "Michelin"));
+        }
         const motorcycle = new Motorcycle(
           Cli.generateVin(),
           answers.color,
@@ -165,7 +169,7 @@ class Cli {
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
           answers.hasSidecar,
-          [new Wheel(17, "Michelin"), new Wheel(17, "Michelin")]
+          wheels
         );
         motorcycle.started = answers.driveable;
         // push the motorcycle to the vehicles array
@@ -233,15 +237,20 @@ class Cli {
         // perform the selected action
         if (answers.action === 'Print details') {
           // find the selected vehicle and print its details
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.vehicles[i].printDetails();
-            }
+          const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
+          if (selectedVehicle) {
+            selectedVehicle.printDetails();
+          } else {
+            console.log('Vehicle not found.');
           }
         } else if (answers.action === 'Tow a vehicle') {
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin && this.vehicles[i] instanceof Truck) {
-              this.findVehicleToTow(this.vehicles[i] as Truck);
+              if (this.vehicles[i].started) {
+                this.findVehicleToTow(this.vehicles[i] as Truck);
+              } else {
+                console.log('Only driveable trucks can tow a vehicle.');
+              }
               return;
             }
           }
@@ -263,13 +272,13 @@ class Cli {
               selectedVehicle.turn('left');
             } else if (answers.action === 'Reverse') {
               selectedVehicle.reverse();
-            } else if (answers.action === 'Perform a wheelie' && selectedVehicle instanceof Motorcycle) {
+            } else if (answers.action === 'Perform a wheelie' && selectedVehicle instanceof Motorcycle && !selectedVehicle.hasSidecar) {
               selectedVehicle.wheelie();
             } else {
-              console.log('Invalid action for the selected vehicle.');
+              console.log('Only Motorcycles without a sidecar can perform wheelies.');
             }
           } else {
-            console.log('Invalid action for the selected vehicle.');
+            console.log('Only Motorcycles without a sidecar can perform wheelies.');
           }
         }
         if (!this.exit) {
