@@ -1,5 +1,6 @@
 // import Driveable interface
 import Driveable from '../interfaces/Driveable.js';
+import inquirer from 'inquirer';
 
 // Vehicle class that implements Driveable interface
 class Vehicle implements Driveable {
@@ -61,8 +62,12 @@ class Vehicle implements Driveable {
   accelerate(change: number): void {
     // Check if the vehicle is started
     if (this.started) {
-      this.currentSpeed += change;
-      console.log(`Vehicle accelerated to ${this.currentSpeed} mph`);
+      if (this.currentSpeed + change > this.topSpeed) {
+        console.log(`Cannot exceed top speed of ${this.topSpeed} mph`);
+      } else {
+        this.currentSpeed += change;
+        console.log(`Vehicle accelerated to ${this.currentSpeed} mph`);
+      }
     } else {
       console.log('Start the vehicle first');
     }
@@ -72,8 +77,26 @@ class Vehicle implements Driveable {
   decelerate(change: number): void {
     // Check if the vehicle is started
     if (this.started) {
-      this.currentSpeed -= change;
-      console.log(`Vehicle decelerated to ${this.currentSpeed} mph`);
+      if (this.currentSpeed === 0) {
+        inquirer
+          .prompt([
+            {
+              type: 'confirm',
+              name: 'reverse',
+              message: 'The vehicle is at 0 mph. Would you like to reverse instead?',
+            },
+          ])
+          .then((answers) => {
+            if (answers.reverse) {
+              this.reverse();
+            } else {
+              console.log('The vehicle remains at 0 mph.');
+            }
+          });
+      } else {
+        this.currentSpeed -= change;
+        console.log(`Vehicle decelerated to ${this.currentSpeed} mph`);
+      }
     } else {
       console.log('Start the vehicle first');
     }
@@ -82,7 +105,6 @@ class Vehicle implements Driveable {
   // Method to stop the vehicle
   stop(): void {
     this.currentSpeed = 0;
-    this.started = false;
     console.log('Vehicle stopped');
   }
 

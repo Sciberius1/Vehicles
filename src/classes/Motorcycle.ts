@@ -1,5 +1,6 @@
 import Vehicle from './Vehicle.js';
 import Wheel from './Wheel.js';
+import inquirer from 'inquirer';
 
 // Motorcycle class that extends Vehicle class
 class Motorcycle extends Vehicle {
@@ -62,6 +63,56 @@ class Motorcycle extends Vehicle {
     } else {
       console.log(`Motorcycle ${this.make} ${this.model} must be moving to perform a wheelie.`);
     }
+  }
+
+  // Method to accelerate the motorcycle
+  override accelerate(change: number): void {
+    // Check if the motorcycle is started
+    if (this.started) {
+      if (this.currentSpeed + change > this.topSpeed) {
+        console.log(`Cannot exceed top speed of ${this.topSpeed} mph`);
+      } else {
+        this.currentSpeed += change;
+        console.log(`Motorcycle accelerated to ${this.currentSpeed} mph`);
+      }
+    } else {
+      console.log('Start the motorcycle first');
+    }
+  }
+
+  // Method to decelerate the motorcycle
+  override decelerate(change: number): void {
+    // Check if the motorcycle is started
+    if (this.started) {
+      if (this.currentSpeed === 0) {
+        inquirer
+          .prompt([
+            {
+              type: 'confirm',
+              name: 'reverse',
+              message: 'The motorcycle is at 0 mph. Would you like to reverse instead?',
+            },
+          ])
+          .then((answers) => {
+            if (answers.reverse) {
+              this.reverse();
+            } else {
+              console.log('The motorcycle remains at 0 mph.');
+            }
+          });
+      } else {
+        this.currentSpeed -= change;
+        console.log(`Motorcycle decelerated to ${this.currentSpeed} mph`);
+      }
+    } else {
+      console.log('Start the motorcycle first');
+    }
+  }
+
+  // Method to stop the motorcycle
+  override stop(): void {
+    this.currentSpeed = 0;
+    console.log('Motorcycle stopped');
   }
 }
 

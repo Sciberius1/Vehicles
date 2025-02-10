@@ -2,6 +2,7 @@
 import Vehicle from "./Vehicle.js";
 import Wheel from "./Wheel.js";
 import AbleToTow from "../interfaces/AbleToTow.js";
+import inquirer from 'inquirer';
 
 // Truck class that extends Vehicle and implements AbleToTow
 class Truck extends Vehicle implements AbleToTow {
@@ -79,6 +80,56 @@ class Truck extends Vehicle implements AbleToTow {
     } else {
       console.log("No vehicle is being towed.");
     }
+  }
+
+  // Method to accelerate the truck
+  override accelerate(change: number): void {
+    // Check if the truck is started
+    if (this.started) {
+      if (this.currentSpeed + change > this.topSpeed) {
+        console.log(`Cannot exceed top speed of ${this.topSpeed} mph`);
+      } else {
+        this.currentSpeed += change;
+        console.log(`Truck accelerated to ${this.currentSpeed} mph`);
+      }
+    } else {
+      console.log('Start the truck first');
+    }
+  }
+
+  // Method to decelerate the truck
+  override decelerate(change: number): void {
+    // Check if the truck is started
+    if (this.started) {
+      if (this.currentSpeed === 0) {
+        inquirer
+          .prompt([
+            {
+              type: 'confirm',
+              name: 'reverse',
+              message: 'The truck is at 0 mph. Would you like to reverse instead?',
+            },
+          ])
+          .then((answers) => {
+            if (answers.reverse) {
+              this.reverse();
+            } else {
+              console.log('The truck remains at 0 mph.');
+            }
+          });
+      } else {
+        this.currentSpeed -= change;
+        console.log(`Truck decelerated to ${this.currentSpeed} mph`);
+      }
+    } else {
+      console.log('Start the truck first');
+    }
+  }
+
+  // Method to stop the truck
+  override stop(): void {
+    this.currentSpeed = 0;
+    console.log('Truck stopped');
   }
 
   override printDetails(): void {

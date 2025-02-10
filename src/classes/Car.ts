@@ -1,6 +1,7 @@
 // Importing Vehicle and Wheel classes
 import Vehicle from './Vehicle.js';
 import Wheel from './Wheel.js';
+import inquirer from 'inquirer';
 
 // Car class that extends Vehicle class
 class Car extends Vehicle {
@@ -68,6 +69,56 @@ class Car extends Vehicle {
     console.log(
       `Wheel 4: ${this.wheels[3].getDiameter} inch with a ${this.wheels[3].getTireBrand} tire`
     );
+  }
+
+  // Method to accelerate the car
+  override accelerate(change: number): void {
+    // Check if the car is started
+    if (this.started) {
+      if (this.currentSpeed + change > this.topSpeed) {
+        console.log(`Cannot exceed top speed of ${this.topSpeed} mph`);
+      } else {
+        this.currentSpeed += change;
+        console.log(`Car accelerated to ${this.currentSpeed} mph`);
+      }
+    } else {
+      console.log('Start the car first');
+    }
+  }
+
+  // Method to decelerate the car
+  override decelerate(change: number): void {
+    // Check if the car is started
+    if (this.started) {
+      if (this.currentSpeed === 0) {
+        inquirer
+          .prompt([
+            {
+              type: 'confirm',
+              name: 'reverse',
+              message: 'The car is at 0 mph. Would you like to reverse instead?',
+            },
+          ])
+          .then((answers) => {
+            if (answers.reverse) {
+              this.reverse();
+            } else {
+              console.log('The car remains at 0 mph.');
+            }
+          });
+      } else {
+        this.currentSpeed -= change;
+        console.log(`Car decelerated to ${this.currentSpeed} mph`);
+      }
+    } else {
+      console.log('Start the car first');
+    }
+  }
+
+  // Method to stop the car
+  override stop(): void {
+    this.currentSpeed = 0;
+    console.log('Car stopped');
   }
 }
 
