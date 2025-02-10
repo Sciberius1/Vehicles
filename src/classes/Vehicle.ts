@@ -15,6 +15,7 @@ class Vehicle implements Driveable {
   weight: number;
   topSpeed: number;
   driveable: boolean; // Add driveable property
+  towedBy?: Vehicle; // Add towedBy property
 
   // Constructor for the Vehicle class
   constructor(
@@ -50,6 +51,9 @@ class Vehicle implements Driveable {
     console.log(`Vehicle started: ${this.started}`);
     console.log(`Vehicle current speed: ${this.currentSpeed} mph`);
     console.log(`Is it driveable? ${this.driveable}`);
+    if (this.towedBy) {
+      console.log(`Being towed by: ${this.towedBy.make} ${this.towedBy.model}`);
+    }
   }
 
   // Method to start the vehicle

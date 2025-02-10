@@ -201,6 +201,7 @@ class Cli {
         const vehicleToTow = answers.vehicleToTow;
         if (vehicleToTow.weight <= truck.towingCapacity) {
           truck.tow(vehicleToTow);
+          vehicleToTow.driveable = false; // make the towed vehicle undrivable
         } else {
           console.log(`The ${vehicleToTow.make} ${vehicleToTow.model} is too heavy to be towed by this truck.`);
         }
@@ -233,7 +234,7 @@ class Cli {
         'Turn left',
         'Reverse'
       );
-      if (selectedVehicle instanceof Truck) {
+      if (selectedVehicle instanceof Truck && !selectedVehicle.towedVehicle) {
         availableActions.push('Tow a vehicle');
       }
       if (selectedVehicle instanceof Motorcycle && !selectedVehicle.hasSidecar) {
@@ -254,6 +255,9 @@ class Cli {
         // perform the selected action
         if (answers.action === 'Print details') {
           selectedVehicle.printDetails();
+          if (selectedVehicle instanceof Truck && selectedVehicle.towedVehicle) {
+            console.log(`Being towed by ${selectedVehicle.make} ${selectedVehicle.model}.`);
+          }
         } else if (answers.action === 'Fix the Vehicle') {
           selectedVehicle.driveable = true;
           console.log('The vehicle has been fixed and is now driveable.');

@@ -75,7 +75,6 @@ class Truck extends Vehicle implements AbleToTow {
   deliverTowedVehicle(): void {
     if (this.towedVehicle) {
       console.log(`The ${this.towedVehicle.make} ${this.towedVehicle.model} has been delivered.`);
-      this.towedVehicle.driveable = true;
       this.towedVehicle = null;
     } else {
       console.log("No vehicle is being towed.");
@@ -132,6 +131,7 @@ class Truck extends Vehicle implements AbleToTow {
     console.log('Truck stopped');
   }
 
+  // Override the printDetails method to include towing information
   override printDetails(): void {
     super.printDetails();
     console.log(`VIN: ${this.vin}`);
@@ -148,6 +148,7 @@ class Truck extends Vehicle implements AbleToTow {
     });
     if (this.towedVehicle) {
       console.log(`Currently towing: ${this.towedVehicle.make} ${this.towedVehicle.model}`);
+      console.log(`Being towed by: ${this.make} ${this.model}`);
     }
   }
 }
