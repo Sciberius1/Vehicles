@@ -114,6 +114,22 @@ class Motorcycle extends Vehicle {
     this.currentSpeed = 0;
     console.log('Motorcycle stopped');
   }
+
+  // Method to reverse the motorcycle
+  override reverse(): void {
+    // Check if the motorcycle is started and stopped
+    if (this.started && this.currentSpeed === 0) {
+      if (this.wheels.length < 3) {
+        console.log('Motorcycles with less than 3 wheels cannot be reversed.');
+      } else {
+        console.log('Motorcycle reversed');
+      }
+    } else if (!this.started) {
+      console.log('Start the motorcycle first');
+    } else {
+      console.log('Stop the motorcycle before reversing');
+    }
+  }
 }
 
 // Export the Motorcycle class as the default export

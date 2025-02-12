@@ -52,7 +52,7 @@ class Vehicle implements Driveable {
     console.log(`Vehicle current speed: ${this.currentSpeed} mph`);
     console.log(`Is it driveable? ${this.driveable}`);
     if (this.towedBy) {
-      console.log(`Being towed by: ${this.towedBy.make} ${this.towedBy.model}`);
+      console.log(`Currently being towed by: ${this.towedBy.make} ${this.towedBy.model}`);
     }
   }
 

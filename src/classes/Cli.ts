@@ -218,22 +218,25 @@ class Cli {
     }
 
     // Determine available actions based on the selected vehicle
-    let availableActions = ['Print details', 'Exit'];
+    let availableActions = ['Print details'];
+    if (selectedVehicle.currentSpeed === 0) {
+      availableActions.push('Exit');
+    }
     if (selectedVehicle instanceof Truck && selectedVehicle.towedVehicle) {
       availableActions.push('Deliver towed vehicle');
     } else if (!selectedVehicle.driveable) {
-      availableActions.push('Fix the Vehicle');
+      availableActions.push('Start the Vehicle');
     } else if (!selectedVehicle.started) {
       availableActions.push('Start the Vehicle');
-    } else {
-      availableActions.push(
-        'Accelerate 5 MPH',
-        'Decelerate 5 MPH',
-        'Stop vehicle',
-        'Turn right',
-        'Turn left',
-        'Reverse'
-      );
+    } else if (!selectedVehicle.towedBy) {
+      availableActions.push('Accelerate 5 MPH');
+      availableActions.push('Decelerate 5 MPH');
+      availableActions.push('Stop vehicle');
+      availableActions.push('Turn right');
+      availableActions.push('Turn left');
+      if (selectedVehicle.currentSpeed === 0) {
+        availableActions.push('Reverse');
+      }
       if (selectedVehicle instanceof Truck && !selectedVehicle.towedVehicle) {
         availableActions.push('Tow a vehicle');
       }
@@ -258,14 +261,14 @@ class Cli {
           if (selectedVehicle instanceof Truck && selectedVehicle.towedVehicle) {
             console.log(`Being towed by ${selectedVehicle.make} ${selectedVehicle.model}.`);
           }
-        } else if (answers.action === 'Fix the Vehicle') {
+        } else if (answers.action === 'Start the Vehicle') {
           selectedVehicle.driveable = true;
-          console.log('The vehicle has been fixed and is now driveable.');
+          console.log('The vehicle has been started and is now driveable.');
         } else if (answers.action === 'Start the Vehicle') {
           if (selectedVehicle.driveable) {
             selectedVehicle.start();
           } else {
-            console.log('This vehicle is not driveable.');
+            console.log('This vehicle is not driveable until it is started.');
           }
         } else if (answers.action === 'Accelerate 5 MPH') {
           selectedVehicle.accelerate(5);

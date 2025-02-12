@@ -49,6 +49,11 @@ class Truck extends Vehicle implements AbleToTow {
       return;
     }
 
+    if (this.towedVehicle) {
+      console.log("The truck is already towing another vehicle.");
+      return;
+    }
+
     if (vehicle === this) {
       console.log("The truck cannot tow itself.");
       return;
@@ -62,7 +67,8 @@ class Truck extends Vehicle implements AbleToTow {
       if (weight <= this.towingCapacity) {
         this.towedVehicle = vehicle;
         vehicle.driveable = false;
-        console.log(`The ${make} ${model} is being towed by this truck.`);
+        vehicle.towedBy = this; // Set the towedBy property
+        console.log(`The ${make} ${model} is now being towed by this truck.`);
       } else {
         console.log(`The ${make} ${model} is too heavy to be towed.`);
       }
@@ -148,7 +154,6 @@ class Truck extends Vehicle implements AbleToTow {
     });
     if (this.towedVehicle) {
       console.log(`Currently towing: ${this.towedVehicle.make} ${this.towedVehicle.model}`);
-      console.log(`Being towed by: ${this.make} ${this.model}`);
     }
   }
 }
